@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"  # Exposes port 80 on your local machine
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro  # Mounts the Nginx configuration file
+    depends_on:
+      - gamdom_test_frontend
+      - gamdom_test_backend
+    networks:
+      - gamdom_network
+
+  gamdom_test_frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    networks:
+      - gamdom_network
+    environment:
+      - REACT_APP_API_URL=http://nginx/api  # Points to the Nginx reverse proxy
+
+  gamdom_test_backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    networks:
+      - gamdom_network
+    environment:
+      - DATABASE_URL=postgres://example_user:example_password@db:5432/example_db
+      - PORT=4000
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: example_user
+      POSTGRES_PASSWORD: example_password
+      POSTGRES_DB: example_db
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - gamdom_network
+
+networks:
+  gamdom_network:
+
+volumes:
+  db_data:
