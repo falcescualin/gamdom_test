@@ -23,6 +23,8 @@ services:
       - MODE=prod
       - VITE_DEFAULT_USER_EMAIL=falcescu.alin@gmail.com
       - VITE_DEFAULT_USER_PASSWORD=Test1234_
+    depends_on:
+      - gamdom_test_backend
 
   gamdom_test_backend:
     build:
@@ -36,6 +38,8 @@ services:
       - DB_USER=example_user
       - DB_PASSWORD=example_password
       - DB_NAME=gamdom_test
+    depends_on:
+      - db
 
   db:
     image: postgres:latest
