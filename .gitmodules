@@ -3,4 +3,4 @@
 	url = https://github.com/falcescualin/gamdom_test_backend.git
 [submodule "frontend"]
 	path = frontend
-	url = https://github.com/falcescualin/gamdom_test_frontend
+	url = https://github.com/falcescualin/gamdom_test_frontend.git
