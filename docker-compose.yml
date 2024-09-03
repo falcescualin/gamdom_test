@@ -1,12 +1,10 @@
-version: '3.8'
-
 services:
   nginx:
     image: nginx:latest
     ports:
-      - "80:80"  # Exposes port 80 on your local machine
+      - "80:80"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro  # Mounts the Nginx configuration file
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - gamdom_test_frontend
       - gamdom_test_backend
@@ -20,7 +18,11 @@ services:
     networks:
       - gamdom_network
     environment:
-      - REACT_APP_API_URL=http://nginx/api  # Points to the Nginx reverse proxy
+      - VITE_HOST_API=http://nginx
+      - VITE_API_VERSION=1
+      - MODE=prod
+      - VITE_DEFAULT_USER_EMAIL=falcescu.alin@gmail.com
+      - VITE_DEFAULT_USER_PASSWORD=Test1234_
 
   gamdom_test_backend:
     build:
@@ -29,15 +31,18 @@ services:
     networks:
       - gamdom_network
     environment:
-      - DATABASE_URL=postgres://example_user:example_password@db:5432/example_db
-      - PORT=4000
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=example_user
+      - DB_PASSWORD=example_password
+      - DB_NAME=gamdom_test
 
   db:
     image: postgres:latest
     environment:
       POSTGRES_USER: example_user
       POSTGRES_PASSWORD: example_password
-      POSTGRES_DB: example_db
+      POSTGRES_DB: gamdom_test
     volumes:
       - db_data:/var/lib/postgresql/data
     networks:
